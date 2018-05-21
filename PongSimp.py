@@ -136,7 +136,7 @@ class Pong:
 
         #if( sum(self.dirBall) !=1):
            # self.dirBall = self.normalize(self.dirBall)
-        reward = 1
+        reward = 0
 
 
         if(action1 ==2):
@@ -157,11 +157,11 @@ class Pong:
 
             if self.posBall[0] > 440:
                 self.score[1] += 1
-                reward = 100
+                #reward = 100
             else:
                 self.score[0] += 1
-                reward = -100
-            if self.score[0] >= 5 or self.score[1] >=5:
+                #reward = -100
+            if self.score[0] >= 1 or self.score[1] >=1:
                 self.done = True
 
             self.posBall = [250, 200]
@@ -180,7 +180,7 @@ class Pong:
 
         if   (self.posPuck1[0]-17 <=self.posBall[0] <= self.posPuck1[0]+17) and (self.posPuck1[1]- 76.5 <= self.posBall[1]<= self.posPuck1[1]+ 76.5) :
             self.dirBall[1] += (2 / ((self.posBall[1] - self.posPuck1[1])+0.01))*-1
-
+            reward = 1
             #self.dirBall[1] = self.dirBall[1] * -1
             self.dirBall[0] = self.dirBall[0] * -1
 

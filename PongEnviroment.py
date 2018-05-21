@@ -52,7 +52,8 @@ class Pong:
             self.scoreBoard.setText('%d   %d' % (self.score[0], self.score[1]))
 
 
-        return np.array([self.posPuck1[1],self.posPuck2[1],self.posBall[0],self.posBall[1],self.dirBall[0],self.dirBall[1]])
+        #return np.array([(self.posPuck1[1]+0.01)/400,(self.posPuck2[1]+0.01)/400,(self.posBall[0]+0.01)/500,(self.posBall[1]+0.01)/400,self.dirBall[0],self.dirBall[1]])
+        return np.array([self.posPuck1[1],  self.posBall[0],self.posBall[1]])
 
     def __init__(self):
         win = GraphWin('Pong', 500, 400, autoflush=False)
@@ -131,11 +132,13 @@ class Pong:
 
         if( sum(self.dirBall) !=1):
             self.dirBall = self.normalize(self.dirBall)
-        reward = 1
+        reward = 0
 
 
-        if(action1 ==2):
+        if(action1 ==0):
             action1 =-1
+
+
 
 
 
@@ -148,15 +151,15 @@ class Pong:
         else:
             self.MovePuck2(0, render)
         #check if out and score
-        if(self.posBall[0] > 500 or self.posBall[0] < 0):
+        if(self.posBall[0] > 435 or self.posBall[0] < 65):
 
-            if self.posBall[0] > 500:
+            if self.posBall[0] > 435:
                 self.score[1] += 1
-                reward = 100
+
             else:
                 self.score[0] += 1
-                reward = -100
-            if self.score[0] >= 5 or self.score[1] >=5:
+
+            if self.score[0] >= 1 or self.score[1] >=1:
                 self.done = True
 
             self.posBall = [250, 200]
@@ -175,7 +178,7 @@ class Pong:
 
         if   (self.posPuck1[0]-17 <=self.posBall[0] <= self.posPuck1[0]+17) and (self.posPuck1[1]- 30 <= self.posBall[1]<= self.posPuck1[1]+ 30) :
             self.dirBall[1] += 2 / ((self.posBall[1] - self.posPuck1[1])+0.01)
-
+            reward = 1
             #self.dirBall[1] = self.dirBall[1] * -1
             self.dirBall[0] = self.dirBall[0] * -1
 
@@ -225,9 +228,9 @@ class Pong:
 
         else:
             self.win.close()
-        scalar = 15
-        return np.array([self.posPuck1[1]*scalar,self.posPuck2[1]*scalar,self.posBall[0]*scalar,self.posBall[1]*scalar,self.dirBall[0]*scalar,self.dirBall[1]*scalar]),np.array( reward),self.done
 
+        #return np.array([(self.posPuck1[1]+0.01)/400,(self.posPuck2[1]+0.01)/400,(self.posBall[0]+0.01)/500,(self.posBall[1]+0.01)/400,self.dirBall[0],self.dirBall[1]]),np.array( reward),self.done
+        return np.array([self.posPuck1[1], self.posBall[0], self.posBall[1]]),np.array( reward),self.done
 
 
 
@@ -239,6 +242,6 @@ class Pong:
 #env = Pong()
 #while True:
 
- #   env.Game(True,0,0)
-  #  print("running")
-   # time.sleep(0.01)
+    #env.Game(True,0,0)
+
+    #time.sleep(0.01)

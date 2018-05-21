@@ -7,12 +7,12 @@ from sklearn.preprocessing import normalize
 
 
 #import gym
-import  PongSimp
+import  PongEnviroment
 import matplotlib.pyplot as plt
 #matplotlib inline
 
 
-env = PongSimp.Pong()
+env = PongEnviroment.Pong()
 
 gamma = 0.99
 
@@ -58,7 +58,7 @@ class agent():
 
 tf.reset_default_graph()  # Clear the Tensorflow graph.
 
-myAgent = agent(lr=1e-2, s_size=5, a_size=3, h_size=8)  # Load the agent.
+myAgent = agent(lr=1e-2, s_size=6, a_size=3, h_size=8)  # Load the agent.
 
 total_episodes = 5000  # Set total number of episodes to train agent on.
 max_ep = 99999
@@ -78,7 +78,7 @@ with tf.Session() as sess:
         gradBuffer[ix] = grad * 0
 
     while i < total_episodes:
-        s = env.getInit(False)
+        s = env.getInit(True)
         running_reward = 0
         ep_history = []
         for j in range(max_ep):
@@ -86,28 +86,21 @@ with tf.Session() as sess:
             a_dist = sess.run(myAgent.output, feed_dict={myAgent.state_in: [s]})
             #print(a_dist)
 
+            highest = -10
+            highestNr = -10
+            for nr in range(0,3):
+                if( a_dist[0][nr] >highest):
+                    highestNr = nr
+                    highest = a_dist[0][nr]
+
+            for nr in range(0, 3):
+                if(nr == highestNr):
+                    a_dist[0][nr]-= 0.1
+                else:
+                    a_dist[0][nr] += 0.05
 
 
-            #highest = -10
-            #highestNr = -10
-            #for nr in range (0,3):
-             #   a_dist[0][nr] += 0.1
-              #  a_dist[0][nr] /= 1.3
-
-
-            #for nr in range(0,3):
-             #   if( a_dist[0][nr] >highest):
-              #      highestNr = nr
-               #     highest = a_dist[0][nr]
-
-            #for nr in range(0, 3):
-             #   if(nr == highestNr):
-              #      a_dist[0][nr]-= 0.1
-               # else:
-                #    a_dist[0][nr] += 0.05
-
-
-            #print(np.sum(a_dist))
+            print(np.sum(a_dist))
 
 
 
@@ -125,7 +118,7 @@ with tf.Session() as sess:
             #a = np.argmax(a_dist)
 
 
-            s1, r, d = env.Game(False,a,0)  # Get our reward for taking an action given a bandit.
+            s1, r, d = env.Game(True,a,0)  # Get our reward for taking an action given a bandit.
             #print(s1)
             #time.sleep(0.01)
             #print(a)
